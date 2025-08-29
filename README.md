@@ -1,12 +1,11 @@
 # OpenFlights for MariaDB
 This is a repo to demonstrate MariaDB features with the publicly available data set from [openflights](https://github.com/jpatokal/openflights).
 
-## MariaDB features to be showcased
-Examples of MariaDB Features we are requesting contributions to demonstrate with this data: 
+## Request for MariaDB use case references
+We are **requesting contributions** to demonstrate MariaDB features with OpenFlights data. 
 
-* [Galera Cluster](https://mariadb.com/docs/galera-cluster)
-* [ColumnStore](https://mariadb.com/docs/columnstore)
-* Other functionalities listed by MariaDB founder Monty Widenius in [Celebrating 15 years of MariaDB](https://monty-says.blogspot.com/2024/10/celebrating-15-years-of-mariadb.html).
+* A great list of features to pick from is available in founder Monty Widenius' blog [Celebrating 15 years of MariaDB](https://monty-says.blogspot.com/2024/10/celebrating-15-years-of-mariadb.html). Pick a feature within any category: storage engines, performance, optimizer, security, replication, logging, DDL enhancements, or other features.
+* Explore MariaDB training material at [uni.mariadb.org](https://uni.mariadb.org) and suggest training exercises for specific lessons. 
 
 ## Using OpenFlights data in MariaDB
 

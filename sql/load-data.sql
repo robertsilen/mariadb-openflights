@@ -1,4 +1,4 @@
-SET GLOBAL local_infile = 'ON';
+USE flightdb2;
 
 \! echo Importing airlines...
 

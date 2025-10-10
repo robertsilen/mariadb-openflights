@@ -1,7 +1,12 @@
 CREATE DATABASE flightdb2;
 
-CREATE USER openflights@localhost;
-GRANT ALL PRIVILEGES ON flightdb2.* TO openflights@localhost;
+CREATE USER 'openflights'@'%' IDENTIFIED BY 'SecurePass123!';
+
+-- GRANT ALL PRIVILEGES ON flightdb2.* TO 'openflights'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, 
+      CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, 
+      SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER 
+ON flightdb2.* TO 'openflights'@'%';
 
 CONNECT flightdb2;
 

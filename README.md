@@ -73,6 +73,12 @@ docker rm -f openflights-mariadb
 ```sql
 USE flightdb2;
 
+-- List the tables
+SHOW TABLES;
+
+-- Columns of a single table
+DESCRIBE airports;
+
 -- Airports in Finland
 SELECT name, city, iata, icao FROM airports WHERE country = 'Finland';
 
@@ -85,6 +91,14 @@ FROM routes r
 JOIN airports a ON a.apid = r.dst_apid
 WHERE r.src_ap = 'HEL'
 ORDER BY a.name;
+
+-- Airlines with the most routes
+SELECT a.name AS airline, a.iata, COUNT(*) AS routes
+FROM routes r
+JOIN airlines a ON a.alid = r.alid
+GROUP BY r.alid
+ORDER BY routes DESC
+LIMIT 10;
 
 -- Top 10 airports by number of departing routes
 SELECT a.name, a.iata, COUNT(*) AS departures
@@ -99,6 +113,16 @@ SELECT country, COUNT(*) AS cnt
 FROM airports
 GROUP BY country
 ORDER BY cnt DESC
+LIMIT 10;
+
+-- Longest routes out of Helsinki, by great-circle distance in km
+SELECT DISTINCT r.dst_ap, d.name AS destination,
+       ROUND(ST_Distance_Sphere(POINT(s.x, s.y), POINT(d.x, d.y)) / 1000) AS km
+FROM routes r
+JOIN airports s ON s.apid = r.src_apid
+JOIN airports d ON d.apid = r.dst_apid
+WHERE r.src_ap = 'HEL'
+ORDER BY km DESC
 LIMIT 10;
 ```
 

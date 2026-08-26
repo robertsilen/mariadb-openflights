@@ -109,7 +109,7 @@ Raw CSV data is in `data/`. The files have no header row.
 | File | Columns (in order) |
 |------|--------------------|
 | `airlines.dat` | alid, name, alias, iata, icao, callsign, country, active |
-| `airports.dat` | apid, name, city, country, iata, icao, lat, lon, elevation, timezone, dst, tz_id |
+| `airports.dat` | apid, name, city, country, iata, icao, lat, lon, elevation, timezone, dst, tz_id, type, source |
 | `routes.dat` | airline, alid, src_ap, src_apid, dst_ap, dst_apid, codeshare, stops, equipment |
 | `countries.dat` | name, iso_code, dafif_code |
 | `planes.dat` | name, iata, icao |

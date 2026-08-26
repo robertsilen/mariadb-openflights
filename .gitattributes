@@ -1,0 +1,4 @@
+# The .dat files are loaded verbatim by LOAD DATA LOCAL INFILE.
+# Keep them byte-identical on every platform — without this, Git's
+# autocrlf on Windows rewrites their line endings on checkout.
+*.dat -text

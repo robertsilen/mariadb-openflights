@@ -117,14 +117,42 @@ LIMIT 10;
 
 -- Longest routes out of Helsinki, by great-circle distance in km
 SELECT DISTINCT r.dst_ap, d.name AS destination,
-       ROUND(ST_Distance_Sphere(POINT(s.x, s.y), POINT(d.x, d.y)) / 1000) AS km
+       ROUND(ST_Distance_Sphere(s.location, d.location) / 1000) AS km
 FROM routes r
 JOIN airports s ON s.apid = r.src_apid
 JOIN airports d ON d.apid = r.dst_apid
 WHERE r.src_ap = 'HEL'
 ORDER BY km DESC
 LIMIT 10;
+
+-- Airports within 100 km of Helsinki city centre.
+-- Note: ST_Distance_Sphere on its own cannot use the spatial index —
+-- EXPLAIN reports a full scan of all 7698 rows.
+SELECT name, iata,
+       ROUND(ST_Distance_Sphere(location, POINT(24.94, 60.17)) / 1000, 1) AS km
+FROM airports
+WHERE ST_Distance_Sphere(location, POINT(24.94, 60.17)) < 100000
+ORDER BY km;
+
+-- The same answer, using the index. MBRContains narrows the search to a
+-- bounding box the index can serve; ST_Distance_Sphere then trims the
+-- corners of that box down to a true radius.
+SET @lon = 24.94, @lat = 60.17, @km = 100;
+SET @dlat = @km / 111.0, @dlon = @km / (111.0 * COS(RADIANS(@lat)));
+
+SELECT name, iata,
+       ROUND(ST_Distance_Sphere(location, POINT(@lon, @lat)) / 1000, 1) AS km
+FROM airports
+WHERE MBRContains(ST_GeomFromText(CONCAT('POLYGON((',
+        @lon-@dlon, ' ', @lat-@dlat, ',', @lon+@dlon, ' ', @lat-@dlat, ',',
+        @lon+@dlon, ' ', @lat+@dlat, ',', @lon-@dlon, ' ', @lat+@dlat, ',',
+        @lon-@dlon, ' ', @lat-@dlat, '))')), location)
+  AND ST_Distance_Sphere(location, POINT(@lon, @lat)) < @km * 1000
+ORDER BY km;
 ```
+
+Run `EXPLAIN` on the last two to see the difference: `type: ALL, key: NULL`
+against `type: range, key: location`.
 
 ## Data files
 

@@ -54,6 +54,34 @@ docker exec -i openflights-mariadb \
 docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
 ```
 
+## Verifying
+
+Check the data files against the published checksums:
+
+```sh
+# macOS
+cd data && shasum -a 256 -c SHA256SUMS
+
+# Linux
+cd data && sha256sum -c SHA256SUMS
+```
+
+Check that the database loaded completely:
+
+```sh
+sudo mariadb < sql/verify.sql
+```
+
+Or, with Docker:
+
+```sh
+docker exec -i openflights-mariadb \
+  mariadb -u root -prootpw123 < sql/verify.sql
+```
+
+It prints one row per table and exits non-zero if any count is wrong, so it
+can be used in a CI pipeline.
+
 ## Cleanup
 
 **Local MariaDB** — drop the database:

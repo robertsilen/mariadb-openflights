@@ -154,6 +154,32 @@ ORDER BY km;
 Run `EXPLAIN` on the last two to see the difference: `type: ALL, key: NULL`
 against `type: range, key: location`.
 
+## Routes that reference unknown airports
+
+`routes.dat` and `airports.dat` are snapshots of the same upstream database
+taken at different times, so a few hundred routes name airports that are not
+in the airport list. Loading resolves this by setting `src_apid` / `dst_apid`
+to `NULL` for those rows — `src_ap` and `dst_ap` keep the IATA code, so the
+route still records where it went.
+
+All 67 663 routes are kept. After loading:
+
+| | Rows with NULL |
+|---|---|
+| `routes.alid` | 479 |
+| `routes.src_apid` | 483 |
+| `routes.dst_apid` | 488 |
+
+This means joining `routes` to `airports` returns fewer rows than
+`SELECT COUNT(*) FROM routes`, which is expected rather than a broken join:
+
+```sql
+-- routes whose origin airport is not in this dataset
+SELECT src_ap, dst_ap, airline
+FROM routes
+WHERE src_apid IS NULL AND src_ap IS NOT NULL;
+```
+
 ## Data files
 
 Raw CSV data is in `data/`. The files have no header row.

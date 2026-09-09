@@ -64,7 +64,7 @@ docker run -d \
   -e MARIADB_ROOT_PASSWORD=flightpw \
   -p 3306:3306 \
   -v $(pwd):/openflights \
-  mariadb:11.7
+  mariadb:lts
 
 # Create database and tables
 docker exec -i openflights-mariadb \
@@ -88,14 +88,14 @@ Anything on your machine that connects over the network rather than through a lo
 | Setting | Value |
 |---------|-------|
 | Host | `127.0.0.1` |
-| Port | `3306`, or whatever you set `MARIADB_PORT` to |
+| Port | `3306`, unless you changed it when starting the server |
 | Database | `flightdb2` |
 | User / password | `root` / `flightpw` |
 
 A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for those clients to use:
 
 ```sql
-CREATE USER 'flights'@'localhost' IDENTIFIED BY 'flights';
+CREATE USER 'flights'@'localhost' IDENTIFIED BY 'flightpw';
 GRANT ALL ON flightdb2.* TO 'flights'@'localhost';
 ```
 

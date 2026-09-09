@@ -26,7 +26,7 @@ sudo mariadb --local-infile=1 < sql/load-data.sql
 sudo mariadb flightdb2
 ```
 
-This works on a stock distribution package install, where the MariaDB `root` account authenticates through the unix socket, so `sudo` is used and no password is asked for. If you have set a password for `root`, use `mariadb -u root -p` instead.
+If you installed MariaDB with your system's package manager (`apt`, `dnf`, Homebrew), the database `root` account is normally tied to your computer's own login rather than to a password. That is why these commands use `sudo` and why none of them asks you for one. If you did set a password for `root` when installing, leave out `sudo` and use `mariadb -u root -p` instead.
 
 ## Quick start with Docker Compose
 
@@ -60,12 +60,31 @@ docker run -d \
 docker exec -i openflights-mariadb \
   mariadb -u root -prootpw123 < sql/create.sql
 
-# Load data (run from repo root so data/ paths resolve)
+# Load the data (run this from the repo folder: load-data.sql
+# refers to data/ using a relative path)
 docker exec -i openflights-mariadb \
   bash -c "cd /openflights && mariadb --local-infile=1 -u root -prootpw123 < sql/load-data.sql"
 
 # Open the MariaDB client with the flightdb2 database selected
 docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
+```
+
+## Connecting from a GUI client
+
+DBeaver, TablePlus, DataGrip, HeidiSQL and the like connect over the network rather than through a socket:
+
+| Setting | Value |
+|---------|-------|
+| Host | `127.0.0.1` |
+| Port | `3306`, or whatever you set `MARIADB_PORT` to |
+| Database | `flightdb2` |
+| User / password | `root` / `openflights` with Compose, `root` / `rootpw123` with plain Docker |
+
+A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for the GUI to use:
+
+```sql
+CREATE USER 'flights'@'localhost' IDENTIFIED BY 'flights';
+GRANT ALL ON flightdb2.* TO 'flights'@'localhost';
 ```
 
 ## Cleanup

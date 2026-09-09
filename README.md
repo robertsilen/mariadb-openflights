@@ -30,80 +30,17 @@ This works on a stock distribution package install, where the MariaDB `root` acc
 
 ## Quick start with Docker Compose
 
-One command, and the schema and data are already loaded when it returns:
-
 ```sh
 git clone https://github.com/mariadb/openflights
 cd openflights
 
 docker compose up --wait
+
+# Open the MariaDB client with the flightdb2 database selected
 docker compose exec mariadb mariadb -u root -popenflights flightdb2
 ```
 
-### What you get
-
-A MariaDB server with the `flightdb2` database populated and ready to query:
-
-| Table | Rows |
-|-------|------|
-| `airports` | 7 698 |
-| `airlines` | 6 162 |
-| `routes` | 67 663 |
-| `countries` | 261 |
-| `planes` | 246 |
-| `locales` | 14 |
-
-Roughly six seconds from an empty volume to a populated database, image
-download excluded. Nothing is installed on the host — removing the container
-and its volume removes every trace.
-
-To connect from a GUI client (DBeaver, TablePlus, DataGrip) or any driver:
-
-| | |
-|---|---|
-| Host / port | `127.0.0.1` / `3306` |
-| User / password | `root` / `openflights` |
-| Database | `flightdb2` |
-
-The password is set in `docker-compose.yml`. This is a local development
-container, so it is deliberately not a secret.
-
-### How it works
-
-`docker-compose.yml` mounts `data/` and `sql/` read-only into the container
-and puts `docker/init.sh` in the MariaDB image's init directory. On the first
-start, the entrypoint initialises the server and then runs that script, which
-applies `sql/create.sql` and `sql/load-data.sql` — the same two files used for
-a local install. The server only begins accepting outside connections once
-that has finished, which is why `--wait` returns a database that is already
-populated rather than one that is still loading.
-
-Because the SQL and data are mounted from your working copy rather than
-copied into an image, editing them and recreating the volume is enough to see
-the change:
-
-```sh
-docker compose down -v && docker compose up --wait
-```
-
-Otherwise the data is loaded once, when the volume is first created, and
-restarting keeps it.
-
-### Options
-
-```sh
-MARIADB_VERSION=11.4 docker compose up --wait   # test another server version
-MARIADB_PORT=3307    docker compose up --wait   # if 3306 is already in use
-```
-
-`MARIADB_VERSION` accepts any tag of the official image, which makes "does
-this feature exist in 10.11?" a five-second experiment. The default is
-`lts`.
-
-> **If you already run MariaDB or MySQL on port 3306**, set `MARIADB_PORT`.
-> Otherwise a host connection to `127.0.0.1:3306` may silently reach your
-> existing server instead of the container, with no error to tell you.
-> `docker compose exec` is unaffected — it always reaches the container.
+`--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on port 3306, and `MARIADB_VERSION=11.4` to try another server version.
 
 ## Quick start with Docker (without Compose)
 

@@ -23,8 +23,6 @@ Whichever you pick, you end up with a `flightdb2` database holding the tables be
 
 ## Quick start with local MariaDB
 
-Use this if MariaDB is already installed on your machine, or if you want it to stay there after you are finished — it is the quickest to run and needs nothing besides MariaDB itself.
-
 ```sh
 git clone https://github.com/mariadb/openflights
 cd openflights
@@ -36,11 +34,9 @@ sudo mariadb --local-infile=1 < sql/load-data.sql
 sudo mariadb flightdb2
 ```
 
-If you installed MariaDB with your system's package manager (`apt`, `dnf`, Homebrew), the database `root` account is normally tied to your computer's own login rather than to a password. That is why these commands use `sudo` and why none of them asks you for a password. If you did set a password for `root` when installing, leave out `sudo` and use `mariadb -u root -p` instead.
+Package-manager installs (`apt`, `dnf`, Homebrew) normally tie the database `root` account to your computer's own login, which is why `sudo` is used here and why nothing asks you for a password. If you set a password for `root` instead, drop the `sudo` and use `mariadb -u root -p`.
 
 ## Quick start with Docker Compose
-
-Use this if you have Docker, or a compatible runtime such as Colima: a single command gives you a working database without installing MariaDB, and removing it afterwards leaves nothing behind on your machine.
 
 ```sh
 git clone https://github.com/mariadb/openflights
@@ -52,11 +48,11 @@ docker compose up --wait
 docker compose exec mariadb mariadb -u root --password=flightpw flightdb2
 ```
 
-`--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on the default port 3306, and `MARIADB_VERSION=11.4` to run a different server version instead of the default, which is MariaDB's current long-term support release.
+`--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Any Docker-compatible runtime works, Colima included.
+
+Set `MARIADB_PORT=3307` if the default 3306 is taken, or `MARIADB_VERSION=11.4` to run a version other than the default, MariaDB's current long-term support release.
 
 ## Quick start with Docker (without Compose)
-
-The same result as above, one step at a time — useful if you have plain Docker without Compose, or if you want to see exactly what each step does.
 
 ```sh
 git clone https://github.com/mariadb/openflights

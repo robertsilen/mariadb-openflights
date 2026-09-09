@@ -41,7 +41,7 @@ cd openflights
 docker compose up --wait
 
 # Open the MariaDB client with the flightdb2 database selected
-docker compose exec mariadb mariadb -u root -popenflights flightdb2
+docker compose exec mariadb mariadb -u root --password=openflights flightdb2
 ```
 
 `--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on the default port 3306, and `MARIADB_VERSION=11.4` to run a different server version instead of the default, which is MariaDB's current long-term support release.
@@ -64,15 +64,15 @@ docker run -d \
 
 # Create database and tables
 docker exec -i openflights-mariadb \
-  mariadb -u root -popenflights < sql/create.sql
+  mariadb -u root --password=openflights < sql/create.sql
 
 # Load the data (run this from the repo folder: load-data.sql
 # refers to data/ using a relative path)
 docker exec -i openflights-mariadb \
-  bash -c "cd /openflights && mariadb --local-infile=1 -u root -popenflights < sql/load-data.sql"
+  bash -c "cd /openflights && mariadb --local-infile=1 -u root --password=openflights < sql/load-data.sql"
 
 # Open the MariaDB client with the flightdb2 database selected
-docker exec -it openflights-mariadb mariadb -u root -popenflights flightdb2
+docker exec -it openflights-mariadb mariadb -u root --password=openflights flightdb2
 ```
 
 ## Connecting to the MariaDB server

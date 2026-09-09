@@ -99,26 +99,6 @@ CREATE USER 'flights'@'localhost' IDENTIFIED BY 'flightpw';
 GRANT ALL ON flightdb2.* TO 'flights'@'localhost';
 ```
 
-## Cleanup
-
-**Local MariaDB** — drop the database:
-
-```sql
-DROP DATABASE flightdb2;
-```
-
-**Docker Compose** — stop the container and remove its data:
-
-```sh
-docker compose down -v
-```
-
-**Docker without Compose** — stop and remove the container:
-
-```sh
-docker rm -f openflights-mariadb
-```
-
 ## Example queries
 
 ```sql
@@ -177,9 +157,29 @@ ORDER BY km DESC
 LIMIT 10;
 ```
 
+## Cleanup
+
+**Local MariaDB** — drop the database:
+
+```sql
+DROP DATABASE flightdb2;
+```
+
+**Docker Compose** — stop the container and remove its data:
+
+```sh
+docker compose down -v
+```
+
+**Docker without Compose** — stop and remove the container:
+
+```sh
+docker rm -f openflights-mariadb
+```
+
 ## Troubleshooting
 
-**`ERROR 2 (HY000) at line 4: File 'data/airlines.dat' not found`**
+**`ERROR 2 (HY000): File 'data/airlines.dat' not found`**
 
 Run the commands from the repository folder. `sql/load-data.sql` refers to
 `data/` using a relative path, so it only works from there.

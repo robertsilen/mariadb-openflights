@@ -75,9 +75,9 @@ docker exec -i openflights-mariadb \
 docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
 ```
 
-## Connecting from a GUI client
+## Connection settings
 
-DBeaver, TablePlus, DataGrip, HeidiSQL and the like connect over the network rather than through a socket:
+Anything that connects over the network rather than through a local socket needs these — a graphical client such as DBeaver or TablePlus, a driver in Python or Java, or the `mariadb` client running on another machine:
 
 | Setting | Value |
 |---------|-------|
@@ -86,7 +86,7 @@ DBeaver, TablePlus, DataGrip, HeidiSQL and the like connect over the network rat
 | Database | `flightdb2` |
 | User / password | `root` / `openflights` with Compose, `root` / `rootpw123` with plain Docker |
 
-A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for the GUI to use:
+A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for those clients to use:
 
 ```sql
 CREATE USER 'flights'@'localhost' IDENTIFIED BY 'flights';

@@ -44,7 +44,7 @@ docker compose up --wait
 docker compose exec mariadb mariadb -u root -popenflights flightdb2
 ```
 
-`--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on port 3306, and `MARIADB_VERSION=11.4` to try another server version.
+`--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on the default port 3306, and `MARIADB_VERSION=11.4` to run a different server version instead of the default, which is MariaDB's current long-term support release.
 
 ## Quick start with Docker (without Compose)
 

@@ -8,7 +8,7 @@ There are three ways to load it, depending on what you already have installed:
 - **[Docker Compose](#quick-start-with-docker-compose)** — if you have Docker: one command, and nothing is installed on your machine.
 - **[Docker without Compose](#quick-start-with-docker-without-compose)** — the same, one step at a time.
 
-Whichever you pick, you end up with a `flightdb2` database holding the tables below.
+Whichever you pick, you end up with a `flightdb2` database holding the tables below. Each starts with `git clone`; if you do not have git, use GitHub's **Code → Download ZIP** button instead and unpack it.
 
 ## Tables
 
@@ -82,6 +82,8 @@ docker exec -i openflights-mariadb \
 # Open the MariaDB client with the flightdb2 database selected
 docker exec -it openflights-mariadb mariadb -u root --password=flightpw flightdb2
 ```
+
+If you already run MariaDB or MySQL on port 3306, change `-p 3306:3306` to `-p 3307:3306`. Nothing will complain if you do not: the container starts, but connections from your machine to port 3306 may reach your existing server instead of this one.
 
 ## Connecting to the MariaDB server
 
@@ -178,6 +180,24 @@ WHERE r.src_ap = 'HEL'
 ORDER BY km DESC
 LIMIT 10;
 ```
+
+## Troubleshooting
+
+**`ERROR 2 (HY000) at line 4: File 'data/airlines.dat' not found`**
+
+Run the commands from the repository folder. `sql/load-data.sql` refers to
+`data/` using a relative path, so it only works from there.
+
+**`ERROR 2002 (HY000): Can't connect to local server through socket`**
+
+The MariaDB server is not running. Start it with `brew services start mariadb`
+on macOS, or `sudo systemctl start mariadb` on Linux. Having the `mariadb`
+command available is not the same as having the server running.
+
+**`Cannot connect to the Docker daemon`**, or **`failed to connect to the docker API`**
+
+Docker itself is installed but not started. Launch Docker Desktop, or run
+`colima start` if you use Colima.
 
 ## Data files
 

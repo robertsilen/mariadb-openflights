@@ -15,6 +15,8 @@ A ready-to-import dataset of airports, airlines, routes, countries, and planes �
 
 ## Quick start with local MariaDB
 
+Use this if MariaDB is already installed on your machine, or if you want it to stay there after you are finished — it is the quickest to run and needs nothing besides MariaDB itself.
+
 ```sh
 git clone https://github.com/mariadb/openflights
 cd openflights
@@ -30,6 +32,8 @@ If you installed MariaDB with your system's package manager (`apt`, `dnf`, Homeb
 
 ## Quick start with Docker Compose
 
+Use this if you have Docker: a single command gives you a working database without installing MariaDB, and removing it afterwards leaves nothing behind on your machine.
+
 ```sh
 git clone https://github.com/mariadb/openflights
 cd openflights
@@ -43,6 +47,8 @@ docker compose exec mariadb mariadb -u root -popenflights flightdb2
 `--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on port 3306, and `MARIADB_VERSION=11.4` to try another server version.
 
 ## Quick start with Docker (without Compose)
+
+The same result as above, one step at a time — useful if you have plain Docker without Compose, or if you want to see exactly what each step does.
 
 ```sh
 git clone https://github.com/mariadb/openflights

@@ -57,22 +57,22 @@ cd openflights
 # Start MariaDB
 docker run -d \
   --name openflights-mariadb \
-  -e MARIADB_ROOT_PASSWORD=rootpw123 \
+  -e MARIADB_ROOT_PASSWORD=openflights \
   -p 3306:3306 \
   -v $(pwd):/openflights \
   mariadb:11.7
 
 # Create database and tables
 docker exec -i openflights-mariadb \
-  mariadb -u root -prootpw123 < sql/create.sql
+  mariadb -u root -popenflights < sql/create.sql
 
 # Load the data (run this from the repo folder: load-data.sql
 # refers to data/ using a relative path)
 docker exec -i openflights-mariadb \
-  bash -c "cd /openflights && mariadb --local-infile=1 -u root -prootpw123 < sql/load-data.sql"
+  bash -c "cd /openflights && mariadb --local-infile=1 -u root -popenflights < sql/load-data.sql"
 
 # Open the MariaDB client with the flightdb2 database selected
-docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
+docker exec -it openflights-mariadb mariadb -u root -popenflights flightdb2
 ```
 
 ## Connecting to the MariaDB server
@@ -84,7 +84,7 @@ Anything on your machine that connects over the network rather than through a lo
 | Host | `127.0.0.1` |
 | Port | `3306`, or whatever you set `MARIADB_PORT` to |
 | Database | `flightdb2` |
-| User / password | `root` / `openflights` with Compose, `root` / `rootpw123` with plain Docker |
+| User / password | `root` / `openflights` |
 
 A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for those clients to use:
 

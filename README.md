@@ -28,7 +28,7 @@ sudo mariadb --local-infile=1 < sql/load-data.sql
 sudo mariadb flightdb2
 ```
 
-If you installed MariaDB with your system's package manager (`apt`, `dnf`, Homebrew), the database `root` account is normally tied to your computer's own login rather than to a password. That is why these commands use `sudo` and why none of them asks you for one. If you did set a password for `root` when installing, leave out `sudo` and use `mariadb -u root -p` instead.
+If you installed MariaDB with your system's package manager (`apt`, `dnf`, Homebrew), the database `root` account is normally tied to your computer's own login rather than to a password. That is why these commands use `sudo` and why none of them asks you for a password. If you did set a password for `root` when installing, leave out `sudo` and use `mariadb -u root -p` instead.
 
 ## Quick start with Docker Compose
 

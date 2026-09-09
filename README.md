@@ -75,7 +75,7 @@ docker exec -i openflights-mariadb \
 docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
 ```
 
-## Connection settings
+## Connecting to the MariaDB server
 
 Anything that connects over the network rather than through a local socket needs these — a graphical client such as DBeaver or TablePlus, a driver in Python or Java, or the `mariadb` client running on another machine:
 

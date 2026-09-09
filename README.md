@@ -28,7 +28,43 @@ sudo mariadb flightdb2
 
 This works on a stock distribution package install, where the MariaDB `root` account authenticates through the unix socket, so `sudo` is used and no password is asked for. If you have set a password for `root`, use `mariadb -u root -p` instead.
 
-## Quick start with Docker
+## Quick start with Docker Compose
+
+One command, and the schema and data are already loaded when it returns:
+
+```sh
+git clone https://github.com/mariadb/openflights
+cd openflights
+
+docker compose up --wait
+docker compose exec mariadb mariadb -u root -popenflights flightdb2
+```
+
+`--wait` blocks until the container reports healthy, which is after the data
+has finished loading — so the client opens on a populated database. The root
+password is `openflights`, set in `docker-compose.yml`; it is a local
+development container, so it is deliberately not a secret.
+
+The data is loaded once, when the volume is first created. Restarting keeps
+it; to reload from scratch, remove the volume too:
+
+```sh
+docker compose down -v && docker compose up --wait
+```
+
+Two optional overrides:
+
+```sh
+MARIADB_VERSION=11.4 docker compose up --wait   # test another server version
+MARIADB_PORT=3307    docker compose up --wait   # if 3306 is already in use
+```
+
+> **If you already run MariaDB or MySQL on port 3306**, set `MARIADB_PORT`.
+> Otherwise a host connection to `127.0.0.1:3306` may silently reach your
+> existing server instead of the container, with no error to tell you.
+> `docker compose exec` is unaffected — it always reaches the container.
+
+## Quick start with Docker (without Compose)
 
 ```sh
 git clone https://github.com/mariadb/openflights
@@ -62,7 +98,13 @@ docker exec -it openflights-mariadb mariadb -u root -prootpw123 flightdb2
 DROP DATABASE flightdb2;
 ```
 
-**Docker** — stop and remove the container:
+**Docker Compose** — stop the container and remove its data:
+
+```sh
+docker compose down -v
+```
+
+**Docker without Compose** — stop and remove the container:
 
 ```sh
 docker rm -f openflights-mariadb

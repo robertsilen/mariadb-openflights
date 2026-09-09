@@ -41,7 +41,7 @@ cd openflights
 docker compose up --wait
 
 # Open the MariaDB client with the flightdb2 database selected
-docker compose exec mariadb mariadb -u root --password=openflights flightdb2
+docker compose exec mariadb mariadb -u root --password=flightpw flightdb2
 ```
 
 `--wait` returns only once the container is healthy, which is after `sql/create.sql` and `sql/load-data.sql` have run inside it, so the client opens on a fully loaded `flightdb2`. Set `MARIADB_PORT=3307` if you already have something on the default port 3306, and `MARIADB_VERSION=11.4` to run a different server version instead of the default, which is MariaDB's current long-term support release.
@@ -57,22 +57,22 @@ cd openflights
 # Start MariaDB
 docker run -d \
   --name openflights-mariadb \
-  -e MARIADB_ROOT_PASSWORD=openflights \
+  -e MARIADB_ROOT_PASSWORD=flightpw \
   -p 3306:3306 \
   -v $(pwd):/openflights \
   mariadb:11.7
 
 # Create database and tables
 docker exec -i openflights-mariadb \
-  mariadb -u root --password=openflights < sql/create.sql
+  mariadb -u root --password=flightpw < sql/create.sql
 
 # Load the data (run this from the repo folder: load-data.sql
 # refers to data/ using a relative path)
 docker exec -i openflights-mariadb \
-  bash -c "cd /openflights && mariadb --local-infile=1 -u root --password=openflights < sql/load-data.sql"
+  bash -c "cd /openflights && mariadb --local-infile=1 -u root --password=flightpw < sql/load-data.sql"
 
 # Open the MariaDB client with the flightdb2 database selected
-docker exec -it openflights-mariadb mariadb -u root --password=openflights flightdb2
+docker exec -it openflights-mariadb mariadb -u root --password=flightpw flightdb2
 ```
 
 ## Connecting to the MariaDB server
@@ -84,7 +84,7 @@ Anything on your machine that connects over the network rather than through a lo
 | Host | `127.0.0.1` |
 | Port | `3306`, or whatever you set `MARIADB_PORT` to |
 | Database | `flightdb2` |
-| User / password | `root` / `openflights` |
+| User / password | `root` / `flightpw` |
 
 A local install is the exception. Its `root` account is tied to your computer login, which works for `sudo mariadb` but is refused over the network, so create an ordinary user for those clients to use:
 

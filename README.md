@@ -5,7 +5,7 @@ A ready-to-import dataset of airports, airlines, routes, countries, and planes �
 There are three ways to load it, depending on what you already have installed:
 
 - **[A local MariaDB](#quick-start-with-local-mariadb)** — if MariaDB is already on your machine, or you want it to stay there afterwards.
-- **[Docker Compose](#quick-start-with-docker-compose)** — if you have Docker, or a compatible runtime such as Colima: one command, and nothing is installed on your machine.
+- **[Docker Compose](#quick-start-with-docker-compose)** — if you have Docker: one command, and nothing is installed on your machine.
 - **[Docker without Compose](#quick-start-with-docker-without-compose)** — the same, one step at a time.
 
 Whichever you pick, you end up with a `flightdb2` database holding the tables below.
